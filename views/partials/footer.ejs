@@ -1,0 +1,52 @@
+<footer>
+    <!-- Copyright information -->
+    © Ruth Blossom
+</footer>
+
+<!-- Import jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+	// Function to validate form submission
+	function validateForm() {
+		// Check if a radio button is selected for rating
+		const ratingInputs = document.getElementsByName('rating');
+		const selectedRating = Array.from(ratingInputs).find(input => input.checked);
+
+		// If no rating is selected, display error message
+		if (!selectedRating) {
+			document.getElementById('error-message').innerText = 'Please select a rating';
+		}
+	}
+
+	// Function to delete data
+	async function deleteData(title) {
+		const confirmed = window.confirm("Are you sure you want to delete this item?");
+
+		// Check if the user confirmed deletion
+		if (!confirmed) {
+			console.log('Operation canceled by user.');
+			return;
+		}
+		try {
+			// Send DELETE request to server
+			const response = await fetch("/delete/" + title, {
+				method: "DELETE",
+			});
+
+			// Check if the request was successful
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+
+			// Redirect to homepage after successful deletion
+			window.location.href = "/";
+		} catch (error) {
+			console.error('There was a problem with the fetch operation:', error);
+		}
+	}
+</script>
+<!-- Include custom JavaScript file -->
+<script src="/index.js"></script>
+</body>
+
+</html>

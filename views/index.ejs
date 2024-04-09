@@ -1,0 +1,69 @@
+<%- include('partials/header.ejs') %>
+
+<div class="books">
+    <div class="sort">
+        <p>Sort By: </p>
+        <!-- Form for sorting -->
+        <form action="/sort" method="post">
+            <select name="sort" id="sort-option">
+                <option value="title">Title</option>
+                <option value="author">Author</option>
+                <option value="rating">Rating</option>
+            </select>
+            <input type="text" name="search" id="searchInput" autocomplete="off" placeholder="Enter book name, author or isbn" class="input-field">
+        </form>
+
+    </div>
+    <!-- Loop through each book in the data -->
+    <% locals.data.forEach(book=> { %>
+        <div class="book">
+            <!-- Check if the book has a cover image -->
+            <% if (book.cover_id == 0){ %>
+                <!-- Display a blank cover if there is no cover image -->
+                <div class="blank-cover">
+                    <div>
+                        <h3><%= book.title %></h3>
+                        <h4>By <%= book.author %></h4>
+                    </div>
+                </div>
+            <% } else { %>
+                <!-- Display the book cover image -->
+                <img src="//covers.openlibrary.org/b/id/<%= book.cover_id %>-L.jpg"
+                     srcset="//covers.openlibrary.org/b/id/<%= book.cover_id %>-L.jpg 2x" alt="Book cover">
+            <% } %>
+            <div class="book-details">
+                <h2><%= book.title %></h2>
+                <h3>By <%= book.author %></h3>
+                <h3>Review:</h3>
+                <p><%= book.review_text %></p>
+                <p><strong>Review Date: </strong><%= book.review_date %></p>
+                <h3>Rating</h3>
+                <div class="rating" action="" method="post">
+                    <!-- Display star ratings based on book's rating -->
+                    <% for (let i=0; i < book.rating; i++) { %>
+                        <span class="fa fa-star checked"></span>
+                    <% } %>
+                    <!-- Display empty stars for the remaining rating -->
+                    <% if(book.rating < 5){ %>
+                        <% for ( let i=0; i < (5-book.rating); i++) { %>
+                            <span class="fa fa-star"></span>
+                        <% } %>
+                    <% } %>
+                </div>
+
+                <div class="button edit">
+                    <a href="/book?title=<%=book.title%>&author=<%= book.author %>&coverId=<%= book.cover_id %>">
+                        <button type="button" class="bn632-hover bn18">Edit</button>
+                    </a>
+                    <!-- Button to delete the book -->
+                    <button onclick="deleteData('<%=book.title%>')" type="button" class="bn632-hover bn18 delete-button">Delete</button>
+
+                </div>
+
+
+            </div>
+        </div>
+    <% }); %>
+</div>
+
+<%- include('partials/footer.ejs') %>
